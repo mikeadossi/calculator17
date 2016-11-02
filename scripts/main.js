@@ -16,7 +16,7 @@ $(document).ready(function(){
 	lastOpPos.push(-1);
 
 	var operator = $('.buttons').each(function(){
-		var that = $(this).html() 
+		var that = $(this).html()
 		$(this).click(function(){
 			//console.log($(this),'\n\n',that)
 			if(that == 'AC'){
@@ -34,17 +34,17 @@ $(document).ready(function(){
 				var check = previousOperator & mask // bitwise and operator
 				if(check != 0 && that != '0'){
 					document.getElementById('firstScreen').value = '';
-				} 
+				}
 				if((that != '0' && check != 0) || (check == 0)){
 					mask = fred.number;
 					check = previousOperator & mask;
 					if(check === 0 && that == '.'){
 						operationStack += 0;
-						document.getElementById('firstScreen').value += '0.';
-						document.getElementById('secondScreen').value += '0.';
+						updateDisplay('0.',1);
+						updateDisplay('0.',2);
 					} else {
-						document.getElementById('firstScreen').value += that;
-						document.getElementById('secondScreen').value += that;
+						updateDisplay(that,1);
+						updateDisplay(that,2);
 					}
 					operationStack += that;
 					previousOperator = fred.number;
@@ -53,7 +53,7 @@ $(document).ready(function(){
 				var result = eval(operationStack);
 				operationStack = result;
 				document.getElementById('firstScreen').value = result;
-				document.getElementById('secondScreen').value += '='+result;
+				updateDisplay('='+result,2);
 				console.log('result: ',result);
 			} else { // is a operator
 				lastOpPos.push(operationStack.length);
@@ -61,7 +61,7 @@ $(document).ready(function(){
 				var check = previousOperator & mask // bitwise and operator
 				if(check === 0){
 			        document.getElementById('firstScreen').value = that;
-			        document.getElementById('secondScreen').value += that;
+			        updateDisplay(that,2);
 			        operationStack += that;
 			        if(that == '+'){
 			        	previousOperator = fred.add;
@@ -76,7 +76,16 @@ $(document).ready(function(){
 		     		document.getElementById('firstScreen').value = 'can\'t perform multiple operations';
 		     	}
 			}
+
 		})
-		
+
 	})
 })
+
+	var updateDisplay = function(val,screen){
+		if(screen == 1){
+			updateDisplay(val,1);
+		} else if(screen == 2){
+			updateDisplay(val,2);
+		}
+	}
