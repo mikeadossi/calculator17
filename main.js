@@ -5,7 +5,7 @@ $(document).ready(function(){
 	var fred = { // we'll use bit fields to check previous operators
 		mult : 1,
 		divis : 2,
-		add : 4, 
+		add : 4,
 		subtr : 8,
 		number : 16,
 		ac : 32,
@@ -25,14 +25,14 @@ $(document).ready(function(){
 				operationStack += that;
 				previousOperator = fred.number;
 			} else { // is a operator
-				var mask = mult | divis | add | subtr // we check to see if any of the values are true
+				var mask = fred.mult | fred.divis | fred.add | fred.subtr // we check to see if any of the values are true
 				var check = previousOperator & mask // bitwise and operator
-				if(check != 0){
+				if(check === 0){
 			        document.getElementById('firstScreen').value = that;
 			        document.getElementById('secondScreen').value += that;
 			        operationStack += that;
-			        if(that == '+'){ 
-			        	previousOperator = fred.add; 
+			        if(that == '+'){
+			        	previousOperator = fred.add;
 			        } else if(that == '-'){
 			        	previousOperator = fred.subtr;
 			        } else if(that == '&times;'){
@@ -48,15 +48,3 @@ $(document).ready(function(){
 		})
 	})
 })
-
-
-
-
-
-
-
-
-
-
-
-
