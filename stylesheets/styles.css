@@ -22,7 +22,7 @@ body{
 }
 
 #firstScreen{
-	background-color:lightgrey;
+	background-color:#C3C2AB;
 	height:27px;
 	width:98.4%;
 	border-radius:7em;
@@ -37,7 +37,7 @@ body{
 }
 
 #secondScreen{
-	background-color:skyblue;
+	background-color:#C3C2AB;
 	color:#656262;
 	width:97.4%;
 	height:1em;
