@@ -30,6 +30,11 @@ $(document).ready(function(){
 				operationStack = operationStack.substring(0, lastOpPos.pop()+1);
 				document.getElementById('secondScreen').value = operationStack;
 			} else if (!isNaN(that)){ // is a number (double neg)
+				var mask = fred.mult | fred.divis | fred.add | fred.subtr // we check to see if any of the values are true
+				var check = previousOperator & mask // bitwise and operator
+				if(check != 0){
+					document.getElementById('firstScreen').value = '';
+				}
 				document.getElementById('firstScreen').value += that;
 				document.getElementById('secondScreen').value += that;
 				operationStack += that;
@@ -42,7 +47,6 @@ $(document).ready(function(){
 				console.log('result: ',result);
 			} else { // is a operator
 				lastOpPos.push(operationStack.length);
-				console.log('lastOpPos: ',lastOpPos );
 				var mask = fred.mult | fred.divis | fred.add | fred.subtr // we check to see if any of the values are true
 				var check = previousOperator & mask // bitwise and operator
 				if(check === 0){
@@ -62,7 +66,6 @@ $(document).ready(function(){
 		     		document.getElementById('firstScreen').value = 'can\'t perform multiple operations';
 		     	}
 			}
-			console.log('char: ',operationStack.substring(lastOpPos +1,operationStack.length));
 		})
 		
 	})
