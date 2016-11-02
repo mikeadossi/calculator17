@@ -23,12 +23,13 @@ body{
 
 #firstScreen{
 	background-color:lightgrey;
-	height:2.6em;
-	width:99.4%;
+	height:27px;
+	width:98.4%;
 	border-radius:7em;
 	border:none;
 	display:block;
 	text-align:right;
+	font-size:21px;
 }
 
 #firstScreen:focus{
@@ -37,7 +38,8 @@ body{
 
 #secondScreen{
 	background-color:skyblue;
-	width:97%;
+	color:#656262;
+	width:97.4%;
 	height:1em;
 	width:99.4%;
 	border-radius:7em;

@@ -32,21 +32,23 @@ $(document).ready(function(){
 			} else if (!isNaN(that) || that == '.'){ // is a number (double neg)
 				var mask = fred.mult | fred.divis | fred.add | fred.subtr // we check to see if any of the values are true
 				var check = previousOperator & mask // bitwise and operator
-				if(check != 0){
+				if(check != 0 && that != '0'){
 					document.getElementById('firstScreen').value = '';
+				} 
+				if((that != '0' && check != 0) || (check == 0)){
+					mask = fred.number;
+					check = previousOperator & mask;
+					if(check === 0 && that == '.'){
+						operationStack += 0;
+						document.getElementById('firstScreen').value += '0.';
+						document.getElementById('secondScreen').value += '0.';
+					} else {
+						document.getElementById('firstScreen').value += that;
+						document.getElementById('secondScreen').value += that;
+					}
+					operationStack += that;
+					previousOperator = fred.number;
 				}
-				mask = fred.number;
-				check = previousOperator & mask;
-				if(check === 0 && that == '.'){
-					operationStack += 0;
-					document.getElementById('firstScreen').value += '0.';
-					document.getElementById('secondScreen').value += '0.';
-				} else {
-					document.getElementById('firstScreen').value += that;
-					document.getElementById('secondScreen').value += that;
-				}
-				operationStack += that;
-				previousOperator = fred.number;
 			} else if(that == '='){
 				var result = eval(operationStack);
 				operationStack = result;
