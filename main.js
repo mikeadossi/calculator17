@@ -12,14 +12,19 @@ $(document).ready(function(){
 		ce : 64
 	}
 
+	var lastOpPos = -1; // last operator position
+
+
 	var operator = $('.buttons').each(function(){
-		var that = $(this).html()
+		var that = $(this).html() 
 		$(this).click(function(){
 			//console.log($(this),'\n\n',that)
 			if(that == 'AC'){
 				previousOperator = fred.ac;
 				document.getElementById('firstScreen').value = '';
 				document.getElementById('secondScreen').value = '';
+				lastOpPos = -1;
+				operationStack = '';
 			} else if (!isNaN(that)){ // is a number (double neg)
 				document.getElementById('firstScreen').value += that;
 				document.getElementById('secondScreen').value += that;
@@ -32,6 +37,8 @@ $(document).ready(function(){
 				document.getElementById('secondScreen').value += '='+result;
 				console.log('result: ',result);
 			} else { // is a operator
+				lastOpPos = operationStack.length;
+				console.log('lastOpPos: ',lastOpPos );
 				var mask = fred.mult | fred.divis | fred.add | fred.subtr // we check to see if any of the values are true
 				var check = previousOperator & mask // bitwise and operator
 				if(check === 0){
@@ -51,7 +58,8 @@ $(document).ready(function(){
 		     		document.getElementById('firstScreen').value = 'can\'t perform multiple operations';
 		     	}
 			}
-			//console.log('\n',previousOperator)
+			console.log('char: ',operationStack.substring(lastOpPos +1,operationStack.length));
 		})
+		
 	})
 })
