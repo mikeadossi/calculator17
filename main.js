@@ -15,15 +15,22 @@ $(document).ready(function(){
 	var operator = $('.buttons').each(function(){
 		var that = $(this).html()
 		$(this).click(function(){
-			console.log($(this),'\n\n',that)
+			//console.log($(this),'\n\n',that)
 			if(that == 'AC'){
 				previousOperator = fred.ac;
 				document.getElementById('firstScreen').value = '';
 				document.getElementById('secondScreen').value = '';
 			} else if (!isNaN(that)){ // is a number (double neg)
 				document.getElementById('firstScreen').value += that;
+				document.getElementById('secondScreen').value += that;
 				operationStack += that;
 				previousOperator = fred.number;
+			} else if(that == '='){
+				var result = eval(operationStack);
+				operationStack = result;
+				document.getElementById('firstScreen').value = result;
+				document.getElementById('secondScreen').value += '='+result;
+				console.log('result: ',result);
 			} else { // is a operator
 				var mask = fred.mult | fred.divis | fred.add | fred.subtr // we check to see if any of the values are true
 				var check = previousOperator & mask // bitwise and operator
@@ -44,7 +51,7 @@ $(document).ready(function(){
 		     		document.getElementById('firstScreen').value = 'can\'t perform multiple operations';
 		     	}
 			}
-			console.log('\n',previousOperator)
+			//console.log('\n',previousOperator)
 		})
 	})
 })
