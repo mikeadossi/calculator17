@@ -25,6 +25,9 @@ $(document).ready(function(){
 				document.getElementById('secondScreen').value = '';
 				lastOpPos = -1;
 				operationStack = '';
+			} else if(that == 'CE'){
+				operationStack = operationStack.substring(0, lastOpPos +1);
+				document.getElementById('secondScreen').value = operationStack;
 			} else if (!isNaN(that)){ // is a number (double neg)
 				document.getElementById('firstScreen').value += that;
 				document.getElementById('secondScreen').value += that;
