@@ -4,6 +4,10 @@ body{
 	margin-top:3em;
 }
 
+#firstScreen, #secondScreen{
+	pointer-events:none;
+}
+
 #container{
 	box-shadow: 3px 3px 10px 4px #414141;
 }
@@ -19,6 +23,8 @@ body{
 	border-radius: 7px;
 	margin-bottom:0.6em;
 	border:1px solid #B4B39D;
+	width:220px;
+	font-family:Orbitron;
 }
 
 #firstScreen{
@@ -30,6 +36,7 @@ body{
 	display:block;
 	text-align:right;
 	font-size:21px;
+	font-family:Orbitron;
 }
 
 #firstScreen:focus{
@@ -46,6 +53,7 @@ body{
 	border:none;
 	border:none;
 	text-align:right;
+	font-family:Orbitron;
 }
 
 #secondScreen:focus{
@@ -84,7 +92,7 @@ body{
     -khtml-user-select: none;    /* Konqueror */
     -moz-user-select: none;      /* Firefox */
     -ms-user-select: none;       /* Internet Explorer/Edge */
-    user-select: none; 
+    user-select: none;
 }
 
 .buttons:hover{
@@ -122,4 +130,20 @@ body{
 #bottomBtnsContainer{
 	float:left;
 	margin-top:-3.5em;
+}
+
+#linkToCodePen{
+	margin-top: 4em;
+}
+
+#codePenAnchor:hover{
+	font-size:1.5em;
+	color:lightgrey;
+	text-decoration:none;
+}
+
+#codePenAnchor{
+	font-size:1.5em;
+	color:#3A3A3A;
+	text-decoration:none;
 }

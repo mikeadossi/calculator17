@@ -19,7 +19,6 @@ $(document).ready(function(){
 	var operator = $('.buttons').each(function(){
 		var that = $(this).html()
 		$(this).click(function(){
-			//console.log($(this),'\n\n',that)
 			if(that == 'AC'){
 				lastOperator = currentOperator & ( fred.mult | fred.divis | fred.add | fred.subtr ) ? currentOperator : lastOperator
 				currentOperator = fred.ac;
@@ -47,12 +46,12 @@ $(document).ready(function(){
 					tokenStream = obj.tokenStream;
 					fred = obj.fred;
 			} else if(that == '='){
-				console.log('tokenStream: ',tokenStream);
-				var result = eval(tokenStream);
-				tokenStream = result;
-				document.getElementById('firstScreen').value = result;
-				updateDisplay('='+result,2);
-				console.log('result: ',result);
+				if(lastOpPos[lastOpPos.length-1] != tokenStream.length-1){
+					var result = eval(tokenStream);
+					tokenStream = result;
+					document.getElementById('firstScreen').value = result;
+					updateDisplay('='+result,2);
+				}
 			} else { // is a operator
 				lastOpPos.push(tokenStream.length);
 				var mask = fred.mult | fred.divis | fred.add | fred.subtr // we check to see if any of the values are true
@@ -104,7 +103,6 @@ var updateDisplay = function(val,screen){
 }
 
 var zeroAndDecimalHandling = function(obj){
-	console.log('obj.tokenStream: ', obj.tokenStream);
 	var mask = obj.fred.mult | obj.fred.divis | obj.fred.add | obj.fred.subtr // we check to see if any of the values are true
 	var check = obj.currentOperator & mask // bitwise and operator
 	if(obj.that === '0' && obj.lastOpPos[obj.lastOpPos.length-1] == obj.tokenStream.length-1){
@@ -125,5 +123,4 @@ var zeroAndDecimalHandling = function(obj){
 	}
 	obj.tokenStream += obj.that;
 	obj.currentOperator = obj.fred.number;
-	console.log('obj.tokenStream: ', obj.tokenStream);
 }
