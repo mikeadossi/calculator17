@@ -1,7 +1,8 @@
 $(document).ready(function(){
 
 	var operationStack = '';
-	var previousOperator = '';
+	var currentOperator = 0;
+	var lastOperator = 0;
 	var fred = { // we'll use bit fields to check previous operators
 		mult : 1,
 		divis : 2,
@@ -20,7 +21,8 @@ $(document).ready(function(){
 		$(this).click(function(){
 			//console.log($(this),'\n\n',that)
 			if(that == 'AC'){
-				previousOperator = fred.ac;
+				lastOperator = currentOperator & ( fred.mult | fred.divis | fred.add | fred.subtr ) ? currentOperator : lastOperator
+				currentOperator = fred.ac;
 				document.getElementById('firstScreen').value = '';
 				document.getElementById('secondScreen').value = '';
 				lastOpPos = [];
@@ -30,26 +32,21 @@ $(document).ready(function(){
 				operationStack = operationStack.substring(0, lastOpPos.pop()+1);
 				document.getElementById('secondScreen').value = operationStack;
 			} else if (!isNaN(that) || that == '.'){ // is a number (double neg)
-				var mask = fred.mult | fred.divis | fred.add | fred.subtr // we check to see if any of the values are true
-				var check = previousOperator & mask // bitwise and operator
-				if(check != 0 && that != '0'){
-					document.getElementById('firstScreen').value = '';
+				var obj = {
+					that : that,
+					currentOperator : currentOperator,
+					operationStack : operationStack,
+					fred : fred
 				}
-				if((that != '0' && check != 0) || (check == 0)){
-					mask = fred.number;
-					check = previousOperator & mask;
-					if(check === 0 && that == '.'){
-						operationStack += 0;
-						updateDisplay('0.',1);
-						updateDisplay('0.',2);
-					} else {
-						updateDisplay(that,1);
-						updateDisplay(that,2);
-					}
-					operationStack += that;
-					previousOperator = fred.number;
-				}
+					zeroAndDecimalHandling(obj);
+					// pass by reference
+					that = obj.that;
+					lastOperator = currentOperator & ( fred.mult | fred.divis | fred.add | fred.subtr ) ? currentOperator : lastOperator
+					currentOperator = obj.currentOperator;
+					operationStack = obj.operationStack;
+					fred = obj.fred;
 			} else if(that == '='){
+				console.log('operationStack: ',operationStack);
 				var result = eval(operationStack);
 				operationStack = result;
 				document.getElementById('firstScreen').value = result;
@@ -58,19 +55,23 @@ $(document).ready(function(){
 			} else { // is a operator
 				lastOpPos.push(operationStack.length);
 				var mask = fred.mult | fred.divis | fred.add | fred.subtr // we check to see if any of the values are true
-				var check = previousOperator & mask // bitwise and operator
+				var check = currentOperator & mask // bitwise and operator
 				if(check === 0){
 			        document.getElementById('firstScreen').value = that;
 			        updateDisplay(that,2);
 			        operationStack += that;
 			        if(that == '+'){
-			        	previousOperator = fred.add;
+								lastOperator = currentOperator & ( fred.mult | fred.divis | fred.add | fred.subtr ) ? currentOperator : lastOperator
+			        	currentOperator = fred.add;
 			        } else if(that == '-'){
-			        	previousOperator = fred.subtr;
+								lastOperator = currentOperator & ( fred.mult | fred.divis | fred.add | fred.subtr ) ? currentOperator : lastOperator
+			        	currentOperator = fred.subtr;
 			        } else if(that == '&times;'){
-			        	previousOperator = fred.mult;
+								lastOperator = currentOperator & ( fred.mult | fred.divis | fred.add | fred.subtr ) ? currentOperator : lastOperator
+			        	currentOperator = fred.mult;
 			        } else if(that == '&divide;'){
-			        	previousOperator = fred.divis;
+								lastOperator = currentOperator & ( fred.mult | fred.divis | fred.add | fred.subtr ) ? currentOperator : lastOperator
+			        	currentOperator = fred.divis;
 			        }
 		     	} else{
 		     		document.getElementById('firstScreen').value = 'can\'t perform multiple operations';
@@ -82,10 +83,31 @@ $(document).ready(function(){
 	})
 })
 
-	var updateDisplay = function(val,screen){
-		if(screen == 1){
-			updateDisplay(val,1);
-		} else if(screen == 2){
-			updateDisplay(val,2);
-		}
+var updateDisplay = function(val,screen){
+	if(screen == 1){
+		document.getElementById('firstScreen').value += val;
+	} else if(screen == 2){
+		document.getElementById('secondScreen').value += val;
 	}
+}
+
+var zeroAndDecimalHandling = function(obj){
+	var mask = obj.fred.mult | obj.fred.divis | obj.fred.add | obj.fred.subtr // we check to see if any of the values are true
+	var check = obj.currentOperator & mask // bitwise and operator
+	if(currentOperator == lastOperator){}
+	if(check != 0){
+		document.getElementById('firstScreen').value = '';
+	}
+	mask = obj.fred.number;
+	check = obj.currentOperator & mask;
+	if(check === 0 && obj.that == '.'){
+		obj.operationStack += 0;
+		updateDisplay('0.',1);
+		updateDisplay('0.',2);
+	} else {
+		updateDisplay(obj.that,1);
+		updateDisplay(obj.that,2);
+	}
+	obj.operationStack += obj.that;
+	obj.currentOperator = obj.fred.number;
+}
