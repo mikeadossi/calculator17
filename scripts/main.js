@@ -60,7 +60,18 @@ $(document).ready(function(){
 				if(check === 0){
 			        document.getElementById('firstScreen').value = that;
 			        updateDisplay(that,2);
+							var tempCharHolder = that;
+							if(that.charCodeAt(0) == 215){
+								that = '*';
+							} else if(that.charCodeAt(0) == 247){
+								that = '/';
+							}
 			        tokenStream += that;
+							if(that == '*'){
+								that = tempCharHolder;
+							} else if(that == '/'){
+								that = tempCharHolder;
+							}
 			        if(that == '+'){
 								lastOperator = currentOperator & ( fred.mult | fred.divis | fred.add | fred.subtr ) ? currentOperator : lastOperator
 			        	currentOperator = fred.add;
