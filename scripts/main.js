@@ -48,7 +48,7 @@ $(document).ready(function(){
 			} else if(that == '='){
 				if(lastOpPos[lastOpPos.length-1] != tokenStream.length-1){
 					var result = eval(tokenStream);
-					tokenStream = result;
+					tokenStream = result.toString();
 					document.getElementById('firstScreen').value = result;
 					updateDisplay('='+result,2);
 				}
