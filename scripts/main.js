@@ -1,6 +1,6 @@
 $(document).ready(function(){
 
-	var operationStack = '';
+	var tokenStream = ''; // tokens represent operators and numbers, they're being stored in a position dependent eval statement
 	var currentOperator = 0;
 	var lastOperator = 0;
 	var fred = { // we'll use bit fields to check previous operators
@@ -27,39 +27,40 @@ $(document).ready(function(){
 				document.getElementById('secondScreen').value = '';
 				lastOpPos = [];
 				lastOpPos.push(-1);
-				operationStack = '';
+				tokenStream = '';
 			} else if(that == 'CE'){
-				operationStack = operationStack.substring(0, lastOpPos.pop()+1);
-				document.getElementById('secondScreen').value = operationStack;
+				tokenStream = tokenStream.substring(0, lastOpPos.pop()+1);
+				document.getElementById('secondScreen').value = tokenStream;
 			} else if (!isNaN(that) || that == '.'){ // is a number (double neg)
 				var obj = {
 					that : that,
 					currentOperator : currentOperator,
-					operationStack : operationStack,
-					fred : fred
+					tokenStream : tokenStream,
+					fred : fred,
+					lastOpPos : lastOpPos
 				}
 					zeroAndDecimalHandling(obj);
 					// pass by reference
 					that = obj.that;
 					lastOperator = currentOperator & ( fred.mult | fred.divis | fred.add | fred.subtr ) ? currentOperator : lastOperator
 					currentOperator = obj.currentOperator;
-					operationStack = obj.operationStack;
+					tokenStream = obj.tokenStream;
 					fred = obj.fred;
 			} else if(that == '='){
-				console.log('operationStack: ',operationStack);
-				var result = eval(operationStack);
-				operationStack = result;
+				console.log('tokenStream: ',tokenStream);
+				var result = eval(tokenStream);
+				tokenStream = result;
 				document.getElementById('firstScreen').value = result;
 				updateDisplay('='+result,2);
 				console.log('result: ',result);
 			} else { // is a operator
-				lastOpPos.push(operationStack.length);
+				lastOpPos.push(tokenStream.length);
 				var mask = fred.mult | fred.divis | fred.add | fred.subtr // we check to see if any of the values are true
 				var check = currentOperator & mask // bitwise and operator
 				if(check === 0){
 			        document.getElementById('firstScreen').value = that;
 			        updateDisplay(that,2);
-			        operationStack += that;
+			        tokenStream += that;
 			        if(that == '+'){
 								lastOperator = currentOperator & ( fred.mult | fred.divis | fred.add | fred.subtr ) ? currentOperator : lastOperator
 			        	currentOperator = fred.add;
@@ -92,22 +93,26 @@ var updateDisplay = function(val,screen){
 }
 
 var zeroAndDecimalHandling = function(obj){
+	console.log('obj.tokenStream: ', obj.tokenStream);
 	var mask = obj.fred.mult | obj.fred.divis | obj.fred.add | obj.fred.subtr // we check to see if any of the values are true
 	var check = obj.currentOperator & mask // bitwise and operator
-	if(currentOperator == lastOperator){}
+	if(obj.that === '0' && obj.lastOpPos[obj.lastOpPos.length-1] == obj.tokenStream.length-1){
+		return false;
+	}
 	if(check != 0){
 		document.getElementById('firstScreen').value = '';
 	}
 	mask = obj.fred.number;
 	check = obj.currentOperator & mask;
 	if(check === 0 && obj.that == '.'){
-		obj.operationStack += 0;
+		obj.tokenStream += 0;
 		updateDisplay('0.',1);
 		updateDisplay('0.',2);
 	} else {
 		updateDisplay(obj.that,1);
 		updateDisplay(obj.that,2);
 	}
-	obj.operationStack += obj.that;
+	obj.tokenStream += obj.that;
 	obj.currentOperator = obj.fred.number;
+	console.log('obj.tokenStream: ', obj.tokenStream);
 }
