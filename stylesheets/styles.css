@@ -120,7 +120,7 @@ body{
 }
 
 #zero{
-	width:6.3em;
+	width:6.9em;
 }
 
 #equalsBtn{
@@ -138,7 +138,7 @@ body{
 
 #codePenAnchor:hover{
 	font-size:1.5em;
-	color:lightgrey;
+	color:#4C5052;
 	text-decoration:none;
 }
 
