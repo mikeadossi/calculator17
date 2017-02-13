@@ -2,7 +2,7 @@
 
 Complete this challenge
 https://www.freecodecamp.com/challenges/build-a-javascript-calculator
-## Specifications
+Codepen: http://codepen.io/mandatoryPen/pen/MjNdQr## Specifications
 
 Listed in the link above
 ### Required
